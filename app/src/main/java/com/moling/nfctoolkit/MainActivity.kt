@@ -21,7 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.moling.nfctoolkit.ui.theme.NFCToolKitTheme
 import com.moling.nfctoolkit.ui.views.MainView
-import com.moling.nfctoolkit.ui.views.isCardDumpsCollapse
+import com.moling.nfctoolkit.ui.views.isCardsCollapse
 import com.moling.nfctoolkit.ui.views.isKeysCollapse
 import com.moling.nfctoolkit.ui.views.isNFCScanCollapse
 import com.moling.nfctoolkit.ui.views.tagATQA
@@ -47,7 +47,7 @@ val mBackPressedCallback: OnBackPressedCallback by lazy  {
     object : OnBackPressedCallback(false) { // enabled Flag
         override fun handleOnBackPressed() {
             isNFCScanCollapse = true
-            isCardDumpsCollapse = true
+            isCardsCollapse = true
             isKeysCollapse = true
         }
     }

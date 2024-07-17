@@ -28,88 +28,53 @@ fun InfoChip(title: String, content: String) {
 }
 
 @Composable
-fun InfoChip(
-    title: String,
-    content: String,
-    onClick: () -> Unit
-) {
-    FunctionChip(
-        icon = Icons.Filled.Info,
-        title = title,
-        content = content,
-        background = MaterialTheme.colorScheme.inversePrimary,
-        onClick = onClick
-    )
+fun InfoChip(title: String, content: String, onClick: () -> Unit) {
+    FunctionChip(Icons.Filled.Info, title, content, MaterialTheme.colorScheme.inversePrimary, onClick)
 }
 
 @Composable
-fun FunctionChip(
-    icon: ImageVector,
-    title: String,
-    content: String? = null,
-    background: Color? = MaterialTheme.colorScheme.surfaceBright,
-    onClick: () -> Unit
-) {
-    FunctionChip(imageVector = icon, title = title, content = content, background = background, onClick = onClick)
-}
+fun TransparentChip(
+    icon: ImageVector, title: String? = null, content: String? = null,
+    background: Color? = Color.Transparent, onClick: () -> Unit
+) { FunctionChip(icon, title, content, background, onClick) }
+
+@Composable
+fun TransparentChip(
+    icon: Painter, title: String? = null, content: String? = null,
+    background: Color? = Color.Transparent, onClick: () -> Unit
+) { FunctionChip(icon, title, content, background, onClick) }
 
 @Composable
 fun FunctionChip(
-    icon: Painter,
-    title: String,
-    content: String? = null,
-    background: Color? = MaterialTheme.colorScheme.surfaceBright,
-    onClick: () -> Unit
-) {
-    FunctionChip(painter = icon, title = title, content = content, background = background, onClick = onClick)
-}
+    icon: ImageVector, title: String? = null, content: String? = null,
+    background: Color? = MaterialTheme.colorScheme.surfaceBright, onClick: () -> Unit
+) { FunctionChip(imageVector = icon, title = title, content = content, background = background, onClick = onClick) }
 
 @Composable
 fun FunctionChip(
-    imageVector: ImageVector? = null,
-    painter: Painter? = null,
-    title: String,
-    content: String? = null,
-    background: Color? = MaterialTheme.colorScheme.surfaceBright,
-    onClick: () -> Unit
+    icon: Painter, title: String? = null, content: String? = null,
+    background: Color? = MaterialTheme.colorScheme.surfaceBright, onClick: () -> Unit
+) { FunctionChip(painter = icon, title = title, content = content, background = background, onClick = onClick) }
+
+@Composable
+fun FunctionChip(
+    imageVector: ImageVector? = null, painter: Painter? = null, title: String? = null,
+    content: String? = null, background: Color? = MaterialTheme.colorScheme.surfaceBright, onClick: () -> Unit
 ) {
     background?.let {
-        Modifier
-            .fillMaxWidth()
-            .background(
-                it,
-                shape = RoundedCornerShape(size = 8.dp)
-            )
+        Modifier .fillMaxWidth() .background( it, shape = RoundedCornerShape(size = 8.dp) )
     }?.let {
         AssistChip(
-            onClick = onClick,
-            modifier = it,
-            border = null,
+            onClick = onClick, modifier = it, border = null,
             label = {
                 Row(Modifier.padding(horizontal = 5.dp, vertical = 10.dp)) {
-                    if (imageVector != null) {
-                        Icon(
-                            imageVector,
-                            contentDescription = "",
-                            Modifier.size(AssistChipDefaults.IconSize * 2)
-                        )
-                    }
-                    else if (painter != null) {
-                        Icon(
-                            painter,
-                            contentDescription = "",
-                            Modifier.size(AssistChipDefaults.IconSize * 2)
-                        )
-                    }
+                    if (imageVector != null)
+                        Icon( imageVector, contentDescription = "", Modifier.size(AssistChipDefaults.IconSize * 2) )
+                    else if (painter != null)
+                        Icon( painter, contentDescription = "", Modifier.size(AssistChipDefaults.IconSize * 2) )
                     Column(Modifier.padding(horizontal = 10.dp)) {
-                        Text(
-                            text = title,
-                            fontSize = 20.sp,
-                            modifier = Modifier.padding(vertical = 5.dp)
-                        )
-                        if (content != null) {
-                            Text(content)
-                        }
+                        if (title != null) Text( text = title, fontSize = 20.sp, modifier = Modifier.padding(vertical = 5.dp) )
+                        if (content != null) Text(content)
                     }
                 }
             }

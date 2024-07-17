@@ -11,6 +11,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CardDumpsView() {
     Column(modifier = Modifier.padding(all = 10.dp)) {
-        Text(text = "CardDumpsView")
+        Text(text = "CardsView")
     }
 }

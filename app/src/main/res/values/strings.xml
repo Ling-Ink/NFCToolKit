@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">NFC ToolKit</string>
+    <string name="app_name" translatable="false">NFC ToolKit</string>
+    <string name="chip_scan">NFC Scan</string>
+    <string name="chip_cards">Saved cards</string>
+    <string name="chip_keys">Saved keys</string>
+    <string name="chip_help">Help</string>
+    <string name="chip_about">About</string>
+    <string name="info_nfc_unsupport">NFC not supported</string>
+    <string name="info_nfc_disabled">NFC not enabled</string>
+    <string name="info_nfc_rw_disabled">NFC r/w will be disabled</string>
+    <string name="scan_info">Info</string>
+    <string name="scan_read">Read</string>
+    <string name="scan_write">Write</string>
+    <string name="scan_info_uid" translatable="false">UID</string>
+    <string name="scan_info_tech">Tech</string>
+    <string name="scan_info_atqa" translatable="false">ATQA</string>
+    <string name="scan_info_sak" translatable="false">SAK</string>
+    <string name="scan_info_mem">Mifare memory size</string>
+    <string name="scan_info_sector">Mifare sector count</string>
+    <string name="scan_info_block">Mifare block count</string>
 </resources>

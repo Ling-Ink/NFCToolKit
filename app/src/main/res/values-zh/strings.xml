@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chip_scan">NFC 扫描</string>
+    <string name="chip_cards">卡转储</string>
+    <string name="chip_keys">密钥文件</string>
+    <string name="chip_help">帮助</string>
+    <string name="chip_about">关于</string>
+    <string name="info_nfc_unsupport">该设备不支持NFC功能</string>
+    <string name="info_nfc_disabled">NFC功能未启用</string>
+    <string name="info_nfc_rw_disabled">NFC读写将被禁用</string>
+    <string name="scan_info">卡信息</string>
+    <string name="scan_read">读卡</string>
+    <string name="scan_write">写卡</string>
+    <string name="scan_info_tech">使用技术</string>
+    <string name="scan_info_mem">Mifare 内存大小</string>
+    <string name="scan_info_sector">Mifare 扇区数</string>
+    <string name="scan_info_block">Mifare 块数</string>
+</resources>

@@ -15,7 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.moling.nfctoolkit.R
 import com.moling.nfctoolkit.ui.SimpleInfo
 
 // Tag info
@@ -30,7 +32,7 @@ var tagMifareBlockCount by mutableStateOf("-")
 @Composable
 fun NfcScanView() {
     var tabState by remember { mutableIntStateOf(0) }
-    val titles = listOf("Info", "Read", "Write")
+    val titles = listOf(stringResource(id = R.string.scan_info), stringResource(id = R.string.scan_read), stringResource(id = R.string.scan_write))
     Column(modifier = Modifier.padding(all = 10.dp)) {
         TabRow(selectedTabIndex = tabState) {
             titles.forEachIndexed { index, title ->
@@ -51,13 +53,13 @@ fun NfcScanView() {
 
 @Composable
 fun InfoTab() {
-    SimpleInfo(title = "UID", content = tagUID)
-    SimpleInfo(title = "Tech", content = tagTech)
-    SimpleInfo(title = "ATQA", content = tagATQA)
-    SimpleInfo(title = "SAK", content = tagSAK)
-    SimpleInfo(title = "Mifare memory size", content = tagMifareSize)
-    SimpleInfo(title = "Mifare sector count", content = tagMifareSectorCount)
-    SimpleInfo(title = "Mifare block count", content = tagMifareBlockCount)
+    SimpleInfo(title = stringResource(id = R.string.scan_info_uid), content = tagUID)
+    SimpleInfo(title = stringResource(id = R.string.scan_info_tech), content = tagTech)
+    SimpleInfo(title = stringResource(id = R.string.scan_info_atqa), content = tagATQA)
+    SimpleInfo(title = stringResource(id = R.string.scan_info_sak), content = tagSAK)
+    SimpleInfo(title = stringResource(id = R.string.scan_info_mem), content = tagMifareSize)
+    SimpleInfo(title = stringResource(id = R.string.scan_info_sector), content = tagMifareSectorCount)
+    SimpleInfo(title = stringResource(id = R.string.scan_info_block), content = tagMifareBlockCount)
 }
 
 @Composable
