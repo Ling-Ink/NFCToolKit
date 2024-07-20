@@ -5,7 +5,7 @@
     <string name="chip_keys">密钥文件</string>
     <string name="chip_help">帮助</string>
     <string name="chip_about">关于</string>
-    <string name="info_nfc_unsupport">该设备不支持NFC功能</string>
+    <string name="info_nfc_unsupported">该设备不支持NFC功能</string>
     <string name="info_nfc_disabled">NFC功能未启用</string>
     <string name="info_nfc_rw_disabled">NFC读写将被禁用</string>
     <string name="scan_info">卡信息</string>

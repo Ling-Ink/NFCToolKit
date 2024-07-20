@@ -31,6 +31,14 @@ import com.moling.nfctoolkit.ui.views.tagMifareSize
 import com.moling.nfctoolkit.ui.views.tagSAK
 import com.moling.nfctoolkit.ui.views.tagTech
 import com.moling.nfctoolkit.ui.views.tagUID
+import com.moling.nfctoolkit.utils.getATQA
+import com.moling.nfctoolkit.utils.getMifareBlockCount
+import com.moling.nfctoolkit.utils.getMifareSectorCount
+import com.moling.nfctoolkit.utils.getMifareSize
+import com.moling.nfctoolkit.utils.getSAK
+import com.moling.nfctoolkit.utils.getTag
+import com.moling.nfctoolkit.utils.getTech
+import com.moling.nfctoolkit.utils.getUID
 import java.lang.Thread.sleep
 
 private const val LOG_TAG = "NFCToolKit"
@@ -56,6 +64,9 @@ val mBackPressedCallback: OnBackPressedCallback by lazy  {
 // NFC status
 var isNFCSupported by mutableStateOf(false)
 var isNFCEnabled by mutableStateOf(false)
+
+// Local file storage
+var appFilesPath: String? = null
 
 class MainActivity : ComponentActivity() {
 
@@ -93,9 +104,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             NFCToolKitTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainView(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    MainView(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -106,6 +115,9 @@ class MainActivity : ComponentActivity() {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         isNFCSupported = nfcAdapter != null
         isNFCEnabled = nfcAdapter?.isEnabled == true
+
+        appFilesPath = filesDir.absolutePath
+        Log.d(LOG_TAG, filesDir.absolutePath)
 
         // NFC status check
         if (isNFCSupported) {
@@ -118,11 +130,11 @@ class MainActivity : ComponentActivity() {
             }.start()
         }
 
+        this.onBackPressedDispatcher.addCallback(this, mBackPressedCallback)
+
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_MUTABLE)
-
-        this.onBackPressedDispatcher.addCallback(this, mBackPressedCallback)
     }
 
     private fun getTagInfo(tag: Tag) {

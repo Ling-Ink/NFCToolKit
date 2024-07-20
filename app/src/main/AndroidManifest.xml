@@ -32,6 +32,12 @@
             <meta-data android:name="android.nfc.action.TECH_DISCOVERED" android:resource="@xml/nfc_tech_filter" />
             <!-- NFC Filters End -->
         </activity>
+        <activity
+            android:name=".EditorActivity"
+            android:exported="true"
+            android:theme="@style/Theme.NFCToolKit"
+            android:launchMode="singleTop">
+        </activity>
     </application>
 
 </manifest>

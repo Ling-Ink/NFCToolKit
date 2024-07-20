@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.moling.nfctoolkit
+package com.moling.nfctoolkit.utils
 
 import android.content.Intent
 import android.nfc.NfcAdapter

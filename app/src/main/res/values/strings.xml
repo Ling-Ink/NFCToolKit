@@ -5,7 +5,7 @@
     <string name="chip_keys">Saved keys</string>
     <string name="chip_help">Help</string>
     <string name="chip_about">About</string>
-    <string name="info_nfc_unsupport">NFC not supported</string>
+    <string name="info_nfc_unsupported">NFC not supported</string>
     <string name="info_nfc_disabled">NFC not enabled</string>
     <string name="info_nfc_rw_disabled">NFC r/w will be disabled</string>
     <string name="scan_info">Info</string>
@@ -18,4 +18,5 @@
     <string name="scan_info_mem">Mifare memory size</string>
     <string name="scan_info_sector">Mifare sector count</string>
     <string name="scan_info_block">Mifare block count</string>
+    <string name="url_help" translatable="false">https://github.com/Ling-Ink/NFCToolKit</string>
 </resources>
