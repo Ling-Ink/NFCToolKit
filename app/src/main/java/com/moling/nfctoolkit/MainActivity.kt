@@ -41,7 +41,7 @@ import com.moling.nfctoolkit.utils.getTech
 import com.moling.nfctoolkit.utils.getUID
 import java.lang.Thread.sleep
 
-private const val LOG_TAG = "NFCToolKit"
+private const val LOG_TAG = "NFCToolKit_Main"
 
 // NFC adapter for checking NFC state in the device
 private var nfcAdapter : NfcAdapter? = null
@@ -117,7 +117,7 @@ class MainActivity : ComponentActivity() {
         isNFCEnabled = nfcAdapter?.isEnabled == true
 
         appFilesPath = filesDir.absolutePath
-        Log.d(LOG_TAG, filesDir.absolutePath)
+        Log.d(LOG_TAG, "App file path: ${filesDir.absolutePath}")
 
         // NFC status check
         if (isNFCSupported) {

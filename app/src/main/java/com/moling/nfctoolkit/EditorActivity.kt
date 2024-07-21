@@ -1,6 +1,5 @@
 package com.moling.nfctoolkit
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -13,7 +12,7 @@ import androidx.compose.ui.Modifier
 import com.moling.nfctoolkit.ui.theme.NFCToolKitTheme
 import com.moling.nfctoolkit.ui.views.editor.KeyView
 
-private const val LOG_TAG = "NFCToolKit"
+private const val LOG_TAG = "NFCToolKit_Editor"
 
 class EditorActivity : ComponentActivity() {
 
@@ -32,9 +31,8 @@ class EditorActivity : ComponentActivity() {
     }
 
     private fun editorInit() {
-        val params: String? = intent.getStringExtra("type")
-        if (params != null) {
-            Log.d(LOG_TAG, params)
-        }
+        val type: String = intent.getStringExtra("type")!!
+        val path: String = intent.getStringExtra("path")!!
+        Log.d(LOG_TAG, "Editor init: $type | $path")
     }
 }

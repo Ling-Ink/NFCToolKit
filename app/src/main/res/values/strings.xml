@@ -19,4 +19,5 @@
     <string name="scan_info_sector">Mifare sector count</string>
     <string name="scan_info_block">Mifare block count</string>
     <string name="url_help" translatable="false">https://github.com/Ling-Ink/NFCToolKit</string>
+    <string name="keyfile_new">New key file</string>
 </resources>
