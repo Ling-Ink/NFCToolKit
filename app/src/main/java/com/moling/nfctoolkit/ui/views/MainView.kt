@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.moling.nfctoolkit.R
 import com.moling.nfctoolkit.isNFCEnabled
 import com.moling.nfctoolkit.isNFCSupported
-import com.moling.nfctoolkit.mBackPressedCallback
+import com.moling.nfctoolkit.mMainActivityBackPressedCallback
 import com.moling.nfctoolkit.ui.FunctionChip
 import com.moling.nfctoolkit.ui.InfoChip
 import com.moling.nfctoolkit.ui.TransparentChip
@@ -44,7 +44,7 @@ fun MainView(modifier: Modifier = Modifier) {
     val urlHelp: String = stringResource(id = R.string.url_help)
 
     Column(modifier = modifier.padding(horizontal = 20.dp, vertical = 50.dp)) {
-        mBackPressedCallback.isEnabled = !isNFCScanCollapse || !isCardsCollapse || !isKeysCollapse
+        mMainActivityBackPressedCallback.isEnabled = !isNFCScanCollapse || !isCardsCollapse || !isKeysCollapse
         Text(text = stringResource(id = R.string.app_name), fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(all = 30.dp))
         if (!(!isCardsCollapse || !isKeysCollapse)) {
             if (!isNFCSupported) InfoChip(title = stringResource(id = R.string.info_nfc_unsupported), content = stringResource(id = R.string.info_nfc_rw_disabled))

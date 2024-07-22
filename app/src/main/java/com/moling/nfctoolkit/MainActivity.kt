@@ -51,7 +51,7 @@ private var nfcAdapter : NfcAdapter? = null
 private var nfcPendingIntent: PendingIntent? = null
 
 // Back pressed dispatcher
-val mBackPressedCallback: OnBackPressedCallback by lazy  {
+val mMainActivityBackPressedCallback: OnBackPressedCallback by lazy  {
     object : OnBackPressedCallback(false) { // enabled Flag
         override fun handleOnBackPressed() {
             isNFCScanCollapse = true
@@ -130,7 +130,7 @@ class MainActivity : ComponentActivity() {
             }.start()
         }
 
-        this.onBackPressedDispatcher.addCallback(this, mBackPressedCallback)
+        this.onBackPressedDispatcher.addCallback(this, mMainActivityBackPressedCallback)
 
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
