@@ -25,16 +25,19 @@ fun EditorTopBar(fileName: String) {
             Text(text = fileName)
         },
         actions = {
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(
-                    painter = resSave,
-                    contentDescription = "Localized description"
-                )
+            if (!(fileName == "std.keys" || fileName == "std_extend.keys" || fileName == "new")) {
+                IconButton(onClick = { /* doSomething() */ }) {
+                    Icon(
+                        painter = resSave,
+                        contentDescription = ""
+                    )
+                }
             }
+
             IconButton(onClick = { /* doSomething() */ }) {
                 Icon(
                     painter = resSaveAs,
-                    contentDescription = "Localized description"
+                    contentDescription = ""
                 )
             }
         }

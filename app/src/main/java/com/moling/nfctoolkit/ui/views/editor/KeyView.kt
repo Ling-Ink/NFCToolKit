@@ -42,7 +42,8 @@ fun KeyView(modifier: Modifier = Modifier, fileName: String) {
             },
             label = {  },
             colors = textFieldColors,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            readOnly = (fileName == "std.keys" || fileName == "std_extend.keys")
         )
     }
 }  

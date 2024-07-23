@@ -2,6 +2,7 @@ package com.moling.nfctoolkit
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.NfcA
@@ -19,6 +20,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.core.app.ActivityCompat
+import com.moling.nfctoolkit.ui.dialogs.ConfirmDialog
 import com.moling.nfctoolkit.ui.theme.NFCToolKitTheme
 import com.moling.nfctoolkit.ui.views.MainView
 import com.moling.nfctoolkit.ui.views.isCardsCollapse
@@ -68,18 +72,17 @@ var isNFCEnabled by mutableStateOf(false)
 // Local file storage
 var appFilesPath: String? = null
 
+var mainActivity: MainActivity? = null
+
+// Application permission about
+var hidePermissionRequest by mutableStateOf(false)
+var isPermissionGranted by mutableStateOf(false)
+
 class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (nfcAdapter != null)
-            nfcAdapter?.enableForegroundDispatch(
-                this, nfcPendingIntent, null,
-                arrayOf(
-                    arrayOf(NfcA::class.java.name),
-                    arrayOf(NfcB::class.java.name),
-                )
-            )
+        if (nfcAdapter != null) enableForegroundDispatch(nfcAdapter!!)
     }
 
     override fun onPause() {
@@ -96,6 +99,11 @@ class MainActivity : ComponentActivity() {
         getTagInfo(tag)
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (nfcAdapter != null && hasFocus && !isNFCEnabled) enableForegroundDispatch(nfcAdapter!!)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -105,6 +113,22 @@ class MainActivity : ComponentActivity() {
             NFCToolKitTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     MainView(modifier = Modifier.padding(innerPadding))
+                    isPermissionGranted = checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    Log.d(LOG_TAG, "Storage permission: $isPermissionGranted")
+                    if (!isPermissionGranted) {
+                        if (!hidePermissionRequest) {
+                            ConfirmDialog(
+                                title = stringResource(id = R.string.dialog_perm_request),
+                                text = stringResource(id = R.string.dialog_perm_storage),
+                                onConfirm = {
+                                    ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 222)
+                                    ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 222)
+                                    hidePermissionRequest = true
+                                },
+                                onDismiss = { hidePermissionRequest = true }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -115,6 +139,7 @@ class MainActivity : ComponentActivity() {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         isNFCSupported = nfcAdapter != null
         isNFCEnabled = nfcAdapter?.isEnabled == true
+        mainActivity = this
 
         appFilesPath = filesDir.absolutePath
         Log.d(LOG_TAG, "App file path: ${filesDir.absolutePath}")
@@ -130,11 +155,33 @@ class MainActivity : ComponentActivity() {
             }.start()
         }
 
+        // Storage permission check
+        if (!isPermissionGranted) {
+            Thread{
+                var run = true
+                while (run) {
+                    isPermissionGranted = checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    if (isPermissionGranted) run = false
+                    sleep(500)
+                }
+            }.start()
+        }
+
         this.onBackPressedDispatcher.addCallback(this, mMainActivityBackPressedCallback)
 
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_MUTABLE)
+    }
+
+    private fun enableForegroundDispatch(nfcAdapter: NfcAdapter) {
+        nfcAdapter.enableForegroundDispatch(
+            this, nfcPendingIntent, null,
+            arrayOf(
+                arrayOf(NfcA::class.java.name),
+                arrayOf(NfcB::class.java.name),
+            )
+        )
     }
 
     private fun getTagInfo(tag: Tag) {

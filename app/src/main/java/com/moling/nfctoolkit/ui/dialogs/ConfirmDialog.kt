@@ -8,15 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun EditorUnsavedDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+fun ConfirmDialog(title: String, text: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = {  },
-        title = {
-            Text(text = "File unsaved", style = MaterialTheme.typography.headlineMedium)
-        },
-        text = {
-            Text(text = "Force quit? If you click Yes, you will lost your work", fontSize = 16.sp)
-        },
+        title = { Text(text = title, style = MaterialTheme.typography.headlineMedium) },
+        text = { Text(text = text, fontSize = 16.sp) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
                 Text(text = "Yes", style = MaterialTheme.typography.bodySmall)

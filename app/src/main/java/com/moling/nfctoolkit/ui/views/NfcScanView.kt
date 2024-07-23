@@ -43,10 +43,12 @@ fun NfcScanView() {
                 }
             }
         }
-        when (tabState) {
-            0 -> InfoTab()
-            1 -> ReadTab()
-            2 -> WriteTab()
+        Column(modifier = Modifier.padding(all = 10.dp)) {
+            when (tabState) {
+                0 -> InfoTab()
+                1 -> ReadTab()
+                2 -> WriteTab()
+            }
         }
     }
 }

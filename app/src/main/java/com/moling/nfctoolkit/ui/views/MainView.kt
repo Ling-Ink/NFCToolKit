@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.moling.nfctoolkit.R
 import com.moling.nfctoolkit.isNFCEnabled
 import com.moling.nfctoolkit.isNFCSupported
+import com.moling.nfctoolkit.isPermissionGranted
 import com.moling.nfctoolkit.mMainActivityBackPressedCallback
 import com.moling.nfctoolkit.ui.FunctionChip
 import com.moling.nfctoolkit.ui.InfoChip
@@ -45,6 +46,7 @@ fun MainView(modifier: Modifier = Modifier) {
 
     Column(modifier = modifier.padding(horizontal = 20.dp, vertical = 50.dp)) {
         mMainActivityBackPressedCallback.isEnabled = !isNFCScanCollapse || !isCardsCollapse || !isKeysCollapse
+        // NFC scan
         Text(text = stringResource(id = R.string.app_name), fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(all = 30.dp))
         if (!(!isCardsCollapse || !isKeysCollapse)) {
             if (!isNFCSupported) InfoChip(title = stringResource(id = R.string.info_nfc_unsupported), content = stringResource(id = R.string.info_nfc_rw_disabled))
@@ -53,14 +55,20 @@ fun MainView(modifier: Modifier = Modifier) {
         }
         if (!isNFCScanCollapse)
             NfcScanView()
+        // Permission not granted info
+        if (!isPermissionGranted && isNFCScanCollapse)
+            InfoChip(title = stringResource(id = R.string.info_storage_permission_missing), content = stringResource(id = R.string.info_storage_not_work))
+        // Card dump
         if (!(!isNFCScanCollapse || !isKeysCollapse))
             FunctionChip(icon = resStyle, title = stringResource(id = R.string.chip_cards)) { isCardsCollapse = !isCardsCollapse }
         if (!isCardsCollapse)
             CardDumpsView()
+        // Keys
         if (!(!isNFCScanCollapse || !isCardsCollapse))
             FunctionChip(icon = resKey, title = stringResource(id = R.string.chip_keys)) { isKeysCollapse = !isKeysCollapse }
         if (!isKeysCollapse)
             KeysView()
+        // Help / About
         if (!(!isNFCScanCollapse || !isCardsCollapse || !isKeysCollapse)) {
              TransparentChip(icon = resHelpCenter, title = stringResource(id = R.string.chip_help)) {
                 ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(urlHelp)))

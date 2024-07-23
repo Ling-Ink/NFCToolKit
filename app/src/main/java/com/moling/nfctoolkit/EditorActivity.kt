@@ -13,7 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.moling.nfctoolkit.ui.dialogs.EditorUnsavedDialog
+import com.moling.nfctoolkit.ui.dialogs.ConfirmDialog
 import com.moling.nfctoolkit.ui.theme.NFCToolKitTheme
 import com.moling.nfctoolkit.ui.views.editor.DumpView
 import com.moling.nfctoolkit.ui.views.editor.EditorTopBar
@@ -57,10 +57,12 @@ class EditorActivity : ComponentActivity() {
                     }
                 )
                 if (showUnsavedDialog)
-                    EditorUnsavedDialog(
+                    ConfirmDialog(
+                        title = "File unsaved",
+                        text = "Force quit? If you click Yes, you will lost your work",
                         onConfirm = {
-                            showUnsavedDialog = false;
-                            mEditorActivityBackPressedCallback.isEnabled = false;
+                            showUnsavedDialog = false
+                            mEditorActivityBackPressedCallback.isEnabled = false
                             finish()
                         },
                         onDismiss = { showUnsavedDialog = false }

@@ -16,4 +16,9 @@
     <string name="scan_info_sector">Mifare 扇区数</string>
     <string name="scan_info_block">Mifare 块数</string>
     <string name="keyfile_new">新建密钥文件</string>
+    <string name="keyfile_import">导入密钥文件</string>
+    <string name="info_storage_permission_missing">存储权限缺失</string>
+    <string name="info_storage_not_work">卡转储/本地密钥文件功能无法使用</string>
+    <string name="dialog_perm_request">权限申请</string>
+    <string name="dialog_perm_storage">NFC Toolkit需要存储空间权限以导入/导出密钥及卡转储</string>
 </resources>
