@@ -13,6 +13,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -25,6 +26,7 @@ import androidx.core.app.ActivityCompat
 import com.moling.nfctoolkit.ui.dialogs.ConfirmDialog
 import com.moling.nfctoolkit.ui.theme.NFCToolKitTheme
 import com.moling.nfctoolkit.ui.views.MainView
+import com.moling.nfctoolkit.ui.views.importKeyFile
 import com.moling.nfctoolkit.ui.views.isCardsCollapse
 import com.moling.nfctoolkit.ui.views.isKeysCollapse
 import com.moling.nfctoolkit.ui.views.isNFCScanCollapse
@@ -35,6 +37,7 @@ import com.moling.nfctoolkit.ui.views.tagMifareSize
 import com.moling.nfctoolkit.ui.views.tagSAK
 import com.moling.nfctoolkit.ui.views.tagTech
 import com.moling.nfctoolkit.ui.views.tagUID
+import com.moling.nfctoolkit.utils.FileUtils
 import com.moling.nfctoolkit.utils.getATQA
 import com.moling.nfctoolkit.utils.getMifareBlockCount
 import com.moling.nfctoolkit.utils.getMifareSectorCount
@@ -44,8 +47,6 @@ import com.moling.nfctoolkit.utils.getTag
 import com.moling.nfctoolkit.utils.getTech
 import com.moling.nfctoolkit.utils.getUID
 import java.lang.Thread.sleep
-
-private const val LOG_TAG = "NFCToolKit_Main"
 
 // NFC adapter for checking NFC state in the device
 private var nfcAdapter : NfcAdapter? = null
@@ -72,13 +73,19 @@ var isNFCEnabled by mutableStateOf(false)
 // Local file storage
 var appFilesPath: String? = null
 
-var mainActivity: MainActivity? = null
-
 // Application permission about
 var hidePermissionRequest by mutableStateOf(false)
 var isPermissionGranted by mutableStateOf(false)
 
 class MainActivity : ComponentActivity() {
+
+    val LOG_TAG = "NFCToolKit_Main"
+
+    val keyImportLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK && result.data != null) {
+            importKeyFile(this, FileUtils.getFile(baseContext, result.data!!.data)!!.absolutePath)
+        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -112,7 +119,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             NFCToolKitTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainView(modifier = Modifier.padding(innerPadding))
+                    MainView(this, modifier = Modifier.padding(innerPadding))
                     isPermissionGranted = checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                     Log.d(LOG_TAG, "Storage permission: $isPermissionGranted")
                     if (!isPermissionGranted) {
@@ -139,7 +146,6 @@ class MainActivity : ComponentActivity() {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         isNFCSupported = nfcAdapter != null
         isNFCEnabled = nfcAdapter?.isEnabled == true
-        mainActivity = this
 
         appFilesPath = filesDir.absolutePath
         Log.d(LOG_TAG, "App file path: ${filesDir.absolutePath}")
@@ -172,6 +178,9 @@ class MainActivity : ComponentActivity() {
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_MUTABLE)
+
+
+
     }
 
     private fun enableForegroundDispatch(nfcAdapter: NfcAdapter) {

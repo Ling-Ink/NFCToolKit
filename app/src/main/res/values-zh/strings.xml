@@ -21,4 +21,6 @@
     <string name="info_storage_not_work">卡转储/本地密钥文件功能无法使用</string>
     <string name="dialog_perm_request">权限申请</string>
     <string name="dialog_perm_storage">NFC Toolkit需要存储空间权限以导入/导出密钥及卡转储</string>
+    <string name="dialog_file_unsaved">文件未保存</string>
+    <string name="dialog_file_unsaved_txt">确定要退出吗?如果退出,将会丢失所有更改</string>
 </resources>

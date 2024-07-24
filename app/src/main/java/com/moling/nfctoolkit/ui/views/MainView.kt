@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.moling.nfctoolkit.MainActivity
 import com.moling.nfctoolkit.R
 import com.moling.nfctoolkit.isNFCEnabled
 import com.moling.nfctoolkit.isNFCSupported
@@ -34,7 +35,7 @@ var isCardsCollapse by mutableStateOf(true)
 var isKeysCollapse by mutableStateOf(true)
 
 @Composable
-fun MainView(modifier: Modifier = Modifier) {
+fun MainView(act: MainActivity, modifier: Modifier = Modifier) {
 
     val resNfc: Painter = painterResource(id = R.drawable.baseline_nfc_24)
     val resStyle: Painter = painterResource(id = R.drawable.baseline_style_24)
@@ -67,7 +68,7 @@ fun MainView(modifier: Modifier = Modifier) {
         if (!(!isNFCScanCollapse || !isCardsCollapse))
             FunctionChip(icon = resKey, title = stringResource(id = R.string.chip_keys)) { isKeysCollapse = !isKeysCollapse }
         if (!isKeysCollapse)
-            KeysView()
+            KeysView(act)
         // Help / About
         if (!(!isNFCScanCollapse || !isCardsCollapse || !isKeysCollapse)) {
              TransparentChip(icon = resHelpCenter, title = stringResource(id = R.string.chip_help)) {

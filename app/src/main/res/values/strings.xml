@@ -25,4 +25,6 @@
     <string name="info_storage_not_work">Card dump / Keys storage will not work</string>
     <string name="dialog_perm_request">Permission request</string>
     <string name="dialog_perm_storage">NFC Toolkit needs storage permission to Import/Export keys or card dumps</string>
+    <string name="dialog_file_unsaved">File not saved</string>
+    <string name="dialog_file_unsaved_txt">Force quit? If you click Yes, you will lost your work</string>
 </resources>
