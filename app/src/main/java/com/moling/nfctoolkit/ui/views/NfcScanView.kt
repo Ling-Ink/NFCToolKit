@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.moling.nfctoolkit.R
 import com.moling.nfctoolkit.ui.SimpleInfo
+import com.moling.nfctoolkit.utils.byteArrayOfInts
 
 // Tag info
 var tagUID by mutableStateOf("-")
@@ -59,9 +60,14 @@ fun InfoTab() {
     SimpleInfo(title = stringResource(id = R.string.scan_info_tech), content = tagTech)
     SimpleInfo(title = stringResource(id = R.string.scan_info_atqa), content = tagATQA)
     SimpleInfo(title = stringResource(id = R.string.scan_info_sak), content = tagSAK)
-    SimpleInfo(title = stringResource(id = R.string.scan_info_mem), content = tagMifareSize)
-    SimpleInfo(title = stringResource(id = R.string.scan_info_sector), content = tagMifareSectorCount)
-    SimpleInfo(title = stringResource(id = R.string.scan_info_block), content = tagMifareBlockCount)
+    if (tagTech.contains("MifareClassic")) {
+        SimpleInfo(title = stringResource(id = R.string.scan_info_mem), content = tagMifareSize)
+        SimpleInfo(title = stringResource(id = R.string.scan_info_sector), content = tagMifareSectorCount)
+        SimpleInfo(title = stringResource(id = R.string.scan_info_block), content = tagMifareBlockCount)
+    }
+    if (tagTech.contains("IsoDep")) {
+
+    }
 }
 
 @Composable

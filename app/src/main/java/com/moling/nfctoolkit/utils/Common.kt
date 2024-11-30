@@ -22,14 +22,16 @@ import java.util.Locale
 
 private const val LOG_TAG = "NFCToolKit_Common"
 
-@OptIn(ExperimentalUnsignedTypes::class) // just to make it clear that the experimental unsigned types are used
+fun byteArrayOfInts(vararg ints: Int) = ByteArray(ints.size) { pos -> ints[pos].toByte() }
+
+@OptIn(ExperimentalUnsignedTypes::class)
 fun ByteArray.toHexString() = asUByteArray().joinToString("") {
     it.toString(16)
         .padStart(2, '0')
         .uppercase(Locale.getDefault())
 }
 
-@OptIn(ExperimentalUnsignedTypes::class) // just to make it clear that the experimental unsigned types are used
+@OptIn(ExperimentalUnsignedTypes::class)
 fun ByteArray.toHexStringRev() = asUByteArray().reversedArray().joinToString("") {
     it.toString(16)
         .padStart(2, '0')

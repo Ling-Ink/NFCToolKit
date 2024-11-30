@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.nfc.NfcAdapter
 import android.nfc.Tag
+import android.nfc.tech.IsoDep
 import android.nfc.tech.NfcA
 import android.nfc.tech.NfcB
 import android.os.Bundle
@@ -23,6 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
+import com.moling.nfctoolkit.nfc.iso.Dep
+import com.moling.nfctoolkit.nfc.mifare.Classic
+import com.moling.nfctoolkit.nfc.mifare.UltralightC
 import com.moling.nfctoolkit.ui.dialogs.ConfirmDialog
 import com.moling.nfctoolkit.ui.theme.NFCToolKitTheme
 import com.moling.nfctoolkit.ui.views.MainView
@@ -38,6 +42,7 @@ import com.moling.nfctoolkit.ui.views.tagSAK
 import com.moling.nfctoolkit.ui.views.tagTech
 import com.moling.nfctoolkit.ui.views.tagUID
 import com.moling.nfctoolkit.utils.FileUtils
+import com.moling.nfctoolkit.utils.byteArrayOfInts
 import com.moling.nfctoolkit.utils.getATQA
 import com.moling.nfctoolkit.utils.getMifareBlockCount
 import com.moling.nfctoolkit.utils.getMifareSectorCount
@@ -46,6 +51,7 @@ import com.moling.nfctoolkit.utils.getSAK
 import com.moling.nfctoolkit.utils.getTag
 import com.moling.nfctoolkit.utils.getTech
 import com.moling.nfctoolkit.utils.getUID
+import com.moling.nfctoolkit.utils.toHexString
 import java.lang.Thread.sleep
 
 // NFC adapter for checking NFC state in the device
@@ -80,6 +86,7 @@ var isPermissionGranted by mutableStateOf(false)
 class MainActivity : ComponentActivity() {
 
     val LOG_TAG = "NFCToolKit_Main"
+    private val key = byteArrayOfInts(0xC4, 0xA0, 0xF3, 0xE1, 0x07, 0x21)
 
     val keyImportLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK && result.data != null) {
@@ -104,6 +111,42 @@ class MainActivity : ComponentActivity() {
 
         val tag: Tag = intent.getTag()
         getTagInfo(tag)
+
+        if (tag.getTech().contains("MifareUltralight_C")) {
+            Log.d(LOG_TAG, "=======MIFARE_ULTRALIGHT=======")
+            val ultralightC = UltralightC(tag)
+            for (i in 0..ultralightC.MAX_PAGES) {
+                Log.d(LOG_TAG, String.format("Page %02d | %s", i, ultralightC.readPage(i).toHexString()))
+            }
+            ultralightC.close()
+        } else if (tag.getTech().contains("MifareClassic")) {
+            Log.d(LOG_TAG, "========MIFARE_CLASSIC=========")
+            val classic = Classic(tag)
+            for (i in 0..classic.lastSectorIndex) {
+                Log.d(LOG_TAG, String.format("Sector %02d A Passed | %s", i, classic.authenticateSector(classic.keyTypeA, i, key)))
+                Log.d(LOG_TAG, String.format("Sector %02d B Passed | %s", i, classic.authenticateSector(classic.keyTypeB, i, key)))
+                for (j in 0..classic.getLastBlockIndex(i)) {
+                    Log.d(LOG_TAG, String.format("Block %02d | %s", j, classic.readBlock(i, j).toHexString()))
+                }
+            }
+            classic.close()
+        } else if (tag.getTech().contains("IsoDep")) {
+            Log.d(LOG_TAG, "============IsoDep=============")
+            val dep = Dep(tag)
+            val cmd: ByteArray = byteArrayOfInts(
+                0x00, // ISO/IEC 7816 standard
+                0xB2, // READ RECORD command
+                0x01, // P1 Parameter 1
+                0x0C, // P2 Parameter 2
+                0x00 // Le
+            )
+            var result: ByteArray = dep.getMasterFiles()
+            Log.d(LOG_TAG, String.format("Master Files : %s", result.toHexString()))
+            // AID: 1PAY.SYS.DDF01
+            dep.selectAID(byteArrayOfInts(0x31, 0x50, 0x41, 0x59, 0x2E, 0x53, 0x59, 0x53, 0x2E, 0x44, 0x44, 0x46, 0x30, 0x31))
+            result = dep.transceive(cmd)
+            Log.d(LOG_TAG, result.toHexString())
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -142,6 +185,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun appInit() {
+        Log.d(LOG_TAG, "===========APP_Start===========")
         // Check if NFC is supported and enabled
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         isNFCSupported = nfcAdapter != null
@@ -178,9 +222,6 @@ class MainActivity : ComponentActivity() {
         nfcPendingIntent = PendingIntent.getActivity(this, 0,
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
             PendingIntent.FLAG_MUTABLE)
-
-
-
     }
 
     private fun enableForegroundDispatch(nfcAdapter: NfcAdapter) {
@@ -195,18 +236,18 @@ class MainActivity : ComponentActivity() {
 
     private fun getTagInfo(tag: Tag) {
         tagUID = tag.getUID()
-        Log.d(LOG_TAG, "UID: $tagUID")
+        Log.d(LOG_TAG, "UID : $tagUID")
         tagTech = tag.getTech().joinToString()
         Log.d(LOG_TAG, "Tech: $tagTech")
         tagATQA = tag.getATQA()
         Log.d(LOG_TAG, "ATQA: $tagATQA")
         tagSAK = tag.getSAK()
-        Log.d(LOG_TAG, "SAK: $tagSAK")
+        Log.d(LOG_TAG, "SAK : $tagSAK")
         tagMifareSize = tag.getMifareSize()
         Log.d(LOG_TAG, "MifareSize: $tagMifareSize")
         tagMifareSectorCount = tag.getMifareSectorCount()
         Log.d(LOG_TAG, "MifareSectorCount: $tagMifareSectorCount")
         tagMifareBlockCount = tag.getMifareBlockCount()
-        Log.d(LOG_TAG, "MifareBlockCount: $tagMifareBlockCount")
+        Log.d(LOG_TAG, "MifareBlockCount : $tagMifareBlockCount")
     }
 }
